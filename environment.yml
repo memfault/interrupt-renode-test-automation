@@ -1,0 +1,16 @@
+channels:
+  - tyhoff17
+  - memfault
+  - conda-forge
+  - nodefaults
+dependencies:
+  - gcc-arm-none-eabi=8.2019.q3.update
+  - python=2.7.15
+  - pip=20.1.1
+  - pip:
+    - robotframework==3.1
+    - netifaces
+    - requests
+    - psutil
+    - pyyaml
+

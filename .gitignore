@@ -1,0 +1,7 @@
+bin/
+*.elf
+*.bin
+generated.*.ld
+libopencm3/
+memfault-firmware-sdk/
+test_output/
