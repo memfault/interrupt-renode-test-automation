@@ -1,0 +1,6 @@
+[submodule "memfault-firmware-sdk"]
+	path = memfault-firmware-sdk
+	url = https://github.com/memfault/memfault-firmware-sdk.git
+[submodule "libopencm3"]
+	path = libopencm3
+	url = https://github.com/libopencm3/libopencm3.git

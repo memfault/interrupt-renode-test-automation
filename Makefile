@@ -113,26 +113,16 @@ $(info $(CFLAGS))
 .PHONY: all test_docker test_local renode
 all: $(BUILD_DIR)/$(PROJECT).elf
 
-$(SRCS_APP): $(MEMFAULT_SDK_ROOT)
-
 $(BUILD_DIR)/$(PROJECT).elf: $(SRCS_APP) $(OPENCM3_LIB)
 	$(ECHO) "  LD		$@"
 	$(Q)$(MKDIR) -p $(BUILD_DIR)
 	$(Q)$(CC) $(CFLAGS) $(LDFLAGS_APP) $^ -o $@
 
-$(OPENCM3_PATH):
-	$(ECHO) "Libopencm3 not found, cloning it..."
-	$(Q)$(GIT) clone https://github.com/libopencm3/libopencm3.git 2>1
-
-$(MEMFAULT_SDK_ROOT):
-	$(ECHO) "memfault-firmware-sdk not found, cloning it..."
-	$(Q)$(GIT) clone https://github.com/memfault/memfault-firmware-sdk.git 2>1
-
 $(RENODE_REPO):
 	$(ECHO) "renode not found, cloning it..."
 	$(Q)$(GIT) clone https://github.com/renode/renode.git 2>1
 
-$(OPENCM3_LIB): $(OPENCM3_PATH)
+$(OPENCM3_LIB):
 	$(ECHO) "Building libopencm3"
 	$(Q)$(MAKE) -s -C $(OPENCM3_PATH) TARGETS=stm32/f4
 
