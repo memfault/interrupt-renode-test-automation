@@ -17,18 +17,18 @@ GIT_SHA := \"$(shell $(GIT) rev-parse --short HEAD)\"
 
 
 SRCS_APP = \
-  app.c \
-  app_shell_commands.c \
-  shell/src/shell.c \
-  clock.c \
-  gpio.c \
-  usart.c \
-  syscalls.c \
-  memfault_wraps.c \
+  src/app.c \
+  src/app_shell_commands.c \
+  src/shell/src/shell.c \
+  src/clock.c \
+  src/gpio.c \
+  src/usart.c \
+  src/syscalls.c \
+  src/memfault_wraps.c \
 
 INCLUDES = \
-	. \
-	shell/include
+	include \
+	src/shell/include
 
 
 MEMFAULT_SDK_ROOT = memfault-firmware-sdk
