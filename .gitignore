@@ -2,6 +2,6 @@ bin/
 *.elf
 *.bin
 generated.*.ld
-test_output/
+test_results/
 build/
 renode/

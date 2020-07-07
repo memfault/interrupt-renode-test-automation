@@ -18,7 +18,6 @@ jobs:
     # Get the arm-non-eabi-gcc toolchain   
     - name: Install arm-none-eabi-gcc
       uses: fiam/arm-none-eabi-gcc@v1
-      if: steps.cache-arm-gcc.outputs.cache-hit != 'true'
       with:
           # The arm-none-eabi-gcc release to use.
           release: '9-2019-q4' 
@@ -38,5 +37,5 @@ jobs:
     - name: Upload Output Dir
       uses: actions/upload-artifact@v2
       with:
-        name: Renode Robot Output Dir
-        path: test_output/
+        name: Renode Test Results
+        path: test_results/
