@@ -35,4 +35,9 @@ jobs:
       run: make -j4
 
     - name: Docker build
-      run: ./docker-test.sh
+      run: ./docker-test.sh 
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Renode Robot Results
+        path: test_output/
