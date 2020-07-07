@@ -14,13 +14,8 @@ int cli_command_coredump(int argc, char *argv[]) {
     return 0;
 }
 
-int cli_command_ping(int argc, char *argv[]) {
-    shell_put_line("PONG");
-    return 0;
-}
-
-int cli_command_assert(int argc, char *argv[]) {
-    MEMFAULT_ASSERT(0);
+int cli_command_fault(int argc, char *argv[]) {
+    void (*g_bad_func_call)(void) = (void (*)(void))0x20000002;
     return 0;
 }
 

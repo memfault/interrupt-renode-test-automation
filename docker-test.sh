@@ -1,60 +1,52 @@
 #!/bin/bash -e
-# Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+
+# Originally written by TensorFlow at
+# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/micro/testing/test_stm32f4_binary.sh
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
+# -------------------------------------------------------
 #
 # Tests a 'stm32f4' STM32F4 ELF by parsing the log output of Renode emulation.
 #
 # First argument is the ELF location.
-# Second argument is a regular expression that's required to be in the output logs
-# for the test to pass.
-#
-# This script must be run from the top-level folder of the tensorflow github
-# repository as it mounts `pwd` to the renode docker image (via docker run -v)
-# and paths in the docker run command assume the entire tensorflow repo is mounted.
 
-declare -r ROOT_DIR=`pwd`
-declare -r TEST_OUTPUT_PATH=${ROOT_DIR}/test_output
-declare -r MICRO_LOG_PATH=${TEST_OUTPUT_PATH}
-declare -r MICRO_LOG_FILENAME=${MICRO_LOG_PATH}/logs.txt
-mkdir -p ${MICRO_LOG_PATH}
+declare -r HOST_ROOT_DIR=`pwd`
+declare -r HOST_TEST_OUTPUT_PATH=${HOST_ROOT_DIR}/test_output
+declare -r HOST_LOG_PATH=${HOST_TEST_OUTPUT_PATH}
+declare -r HOST_LOG_FILENAME=${HOST_LOG_PATH}/logs.txt
 
-docker build -t renode_stm32f4 \
-  -f ${ROOT_DIR}/Dockerfile .
+declare -r DOCKER_TAG=renode_stm32f4
+declare -r DOCKER_WORKSPACE=/workspace
+declare -r DOCKER_TEST_OUTPUT_PATH=/tmp/test_output
 
-exit_code=0
+mkdir -p ${HOST_LOG_PATH}
+
+docker build -t ${DOCKER_TAG} -f ${HOST_ROOT_DIR}/Dockerfile .
+
 # running in `if` to avoid setting +e
 
+exit_code=0
 if ! docker run \
   --log-driver=none -a stdout -a stderr \
-  -v ${ROOT_DIR}:/workspace \
-  -v ${TEST_OUTPUT_PATH}:/tmp/test_output \
-  -e BIN=/workspace/$1 \
-  -e SCRIPT=/workspace/renode-config.resc \
-  -it renode_stm32f4 \
-  /bin/bash -c "cd /workspace/ && /home/developer/renode/test.sh -t /workspace/tests/tests.yaml --variable PWD_PATH:/workspace -r ./test_output 2>&1 > /tmp/test_output/logs.txt"
+  --volume ${HOST_ROOT_DIR}:${DOCKER_WORKSPACE} \
+  --volume ${HOST_TEST_OUTPUT_PATH}:${DOCKER_TEST_OUTPUT_PATH} \
+  --env SCRIPT=${DOCKER_WORKSPACE}/renode-config.resc \
+  --workdir ${DOCKER_WORKSPACE} \
+  -it ${DOCKER_TAG} \
+  /bin/bash -c "./run_tests.sh"
 then
   echo "FAILED"
   exit_code=1
 fi
 
-echo "LOGS:"
-cat ${MICRO_LOG_FILENAME}
+echo -e "\n----- LOGS -----\n"
+cat ${HOST_LOG_FILENAME}
+
 if [ $exit_code -eq 0 ]
 then
   echo "$1: PASS"
 else
-  echo "$1: FAIL - '$2' not found in logs."
+  echo "$1: FAIL"
 fi
+
+# Raise the exit
 exit $exit_code

@@ -36,6 +36,8 @@ MEMFAULT_CORE_SRC_DIR = $(MEMFAULT_SDK_ROOT)/components/core/src
 MEMFAULT_UTIL_SRC_DIR = $(MEMFAULT_SDK_ROOT)/components/util/src
 MEMFAULT_PANICS_SRC_DIR = $(MEMFAULT_SDK_ROOT)/components/panics/src
 
+RENODE_REPO = renode
+
 SRCS_APP += \
   $(MEMFAULT_CORE_SRC_DIR)/arch_arm_cortex_m.c \
   $(MEMFAULT_CORE_SRC_DIR)/memfault_build_id.c \
@@ -108,10 +110,12 @@ LDSCRIPT = stm32f429i-discovery.ld
 
 $(info $(CFLAGS))
 
-.PHONY: all
+.PHONY: all test_docker test_local renode
 all: $(BUILD_DIR)/$(PROJECT).elf
 
-$(BUILD_DIR)/$(PROJECT).elf: $(SRCS_APP) $(OPENCM3_LIB) | $(MEMFAULT_SDK_ROOT)
+$(SRCS_APP): $(MEMFAULT_SDK_ROOT)
+
+$(BUILD_DIR)/$(PROJECT).elf: $(SRCS_APP) $(OPENCM3_LIB)
 	$(ECHO) "  LD		$@"
 	$(Q)$(MKDIR) -p $(BUILD_DIR)
 	$(Q)$(CC) $(CFLAGS) $(LDFLAGS_APP) $^ -o $@
@@ -124,11 +128,25 @@ $(MEMFAULT_SDK_ROOT):
 	$(ECHO) "memfault-firmware-sdk not found, cloning it..."
 	$(Q)$(GIT) clone https://github.com/memfault/memfault-firmware-sdk.git 2>1
 
+$(RENODE_REPO):
+	$(ECHO) "renode not found, cloning it..."
+	$(Q)$(GIT) clone https://github.com/renode/renode.git 2>1
+
 $(OPENCM3_LIB): $(OPENCM3_PATH)
 	$(ECHO) "Building libopencm3"
 	$(Q)$(MAKE) -s -C $(OPENCM3_PATH) TARGETS=stm32/f4
+
+test_docker:
+	./docker-test.sh
+
+test_local: $(RENODE_REPO)
+	./run_tests.sh
+
+start_renode:
+	./start.sh
 
 .PHONY: clean
 clean:
 	$(ECHO) "  CLEAN		rm -rf $(BUILD_DIR)"
 	$(Q)rm -rf $(BUILD_DIR)
+	$(Q)make -C $(OPENCM3_PATH) clean

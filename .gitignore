@@ -5,3 +5,5 @@ generated.*.ld
 libopencm3/
 memfault-firmware-sdk/
 test_output/
+build/
+renode/
