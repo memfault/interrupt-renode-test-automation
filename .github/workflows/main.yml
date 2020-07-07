@@ -24,24 +24,12 @@ jobs:
       with:
         submodules: true
 
-    # Store the arm compilers in the cache to speed up builds
-    - name: Cache arm-none-eabi-gcc tools
-      id: cache-arm-gcc
-      uses: actions/cache@v1
-      with:
-        path: $HOME/arm-none-eabi-gcc-9-2019-q4
-        key: ${{ runner.os }}-arm-gcc-9-2019-q4
-
     # Get the arm-non-eabi-gcc toolchain   
     - name: Install arm-none-eabi-gcc
       uses: fiam/arm-none-eabi-gcc@v1
       if: steps.cache-arm-gcc.outputs.cache-hit != 'true'
       with:
           release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
-          directory: $HOME/arm-none-eabi-gcc-9-2019-q4
-
-    - name: Add toolchain to path
-      run: echo "::add-path::$HOME/arm-none-eabi-gcc-9-2019-q4/bin"
 
     - name: Build Firmware
       run: make -j4
