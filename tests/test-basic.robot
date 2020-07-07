@@ -37,15 +37,3 @@ Ping
     Wait For Prompt On Uart     ${SHELL_PROMPT}
     Write Line To Uart          ping
     Wait For Line On Uart       PONG
-
-Read Var
-    [Documentation]             Reads prompt output into variable
-    [Tags]                      critical
-
-    Start Test
-
-    Wait For Prompt On Uart     ${SHELL_PROMPT}
-    Write Line To Uart          coredump
-    ${p}=  Wait For Line On Uart    coredump:(.*)         timeout=10  treatAsRegex=true
-    Log                         We got ${p.groups[0]}!
-

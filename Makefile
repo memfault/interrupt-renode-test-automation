@@ -149,4 +149,4 @@ start_renode:
 clean:
 	$(ECHO) "  CLEAN		rm -rf $(BUILD_DIR)"
 	$(Q)rm -rf $(BUILD_DIR)
-	$(Q)make -C $(OPENCM3_PATH) clean
+	$(Q)make -C $(OPENCM3_PATH) TARGETS=stm32/f4 clean
