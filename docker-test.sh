@@ -31,7 +31,7 @@ if ! docker run \
   --volume ${HOST_TEST_OUTPUT_PATH}:${DOCKER_TEST_OUTPUT_PATH} \
   --env SCRIPT=${DOCKER_WORKSPACE}/renode-config.resc \
   --workdir ${DOCKER_WORKSPACE} \
-  -it ${DOCKER_TAG} \
+  ${DOCKER_TAG} \
   /bin/bash -c "./run_tests.sh"
 then
   echo "FAILED"
