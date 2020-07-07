@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,11 @@ jobs:
     - name: Build Firmware
       run: make -j4
 
+    - name: Upload ELF
+      uses: actions/upload-artifact@v2
+      with:
+        name: renode-example.elf
+        path: build/renode-example.elf
 
     - name: Renode Tests
       run: ./docker-test.sh 
@@ -35,15 +40,3 @@ jobs:
       with:
         name: Renode Robot Output Dir
         path: test_output/
-
-    - name: Upload Report
-      uses: actions/upload-artifact@v2
-      with:
-        name: Renode Robot Report
-        path: test_output/report.html
-
-    - name: Upload Log
-      uses: actions/upload-artifact@v2
-      with:
-        name: Renode Robot Log
-        path: test_output/log.html
