@@ -46,8 +46,6 @@ jobs:
 
     - name: Build Firmware
       run: make -j4
-      env:
-        PATH: "$HOME/arm-none-eabi-gcc-9-2019-q4/bin:$PATH"
 
     - name: Docker build
       run: ./docker-test.sh
