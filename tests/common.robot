@@ -24,8 +24,6 @@ Create Snapshot Of Failed Test
     Execute Command  Save ${snapshot_path}
     Log To Console   Failed emulation's state saved to ${snapshot_path}
 
-Retrieve Coredump If Exists
-
 Test Teardown
     Run Keyword If  ${CREATE_SNAPSHOT_ON_FAIL}
     ...   Run Keyword If Test Failed

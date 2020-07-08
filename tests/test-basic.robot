@@ -54,7 +54,8 @@ Greet
     ${p}=  Wait For Line On Uart    Hello (\\w+)!     treatAsRegex=true
     Should Be True                  'Tyler' == """${p.groups[0]}"""
 
-Fault
+
+Trigger Fault
     [Documentation]             Should fail, but fine since non_critical
     [Tags]                      non_critical  uart  input
 
@@ -64,16 +65,4 @@ Fault
     Write Line To Uart              fault
 
     # By now we've crashed
-    Wait For Line On Uart           Nope     timeout=2
-
-
-Should Fail
-    [Documentation]             Should fail, but fine since non_critical
-    [Tags]                      non_critical  uart  input
-
-    Start Test
-
-    Wait For Prompt On Uart         ${SHELL_PROMPT}
-    Write Line To Uart              command_doesnt_exist
-
     Wait For Line On Uart           Nope     timeout=2

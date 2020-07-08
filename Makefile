@@ -23,58 +23,17 @@ SRCS_APP = \
   src/clock.c \
   src/gpio.c \
   src/usart.c \
-  src/syscalls.c \
-  src/memfault_wraps.c \
+  src/syscalls.c
 
 INCLUDES = \
 	include \
 	src/shell/include
 
-
-MEMFAULT_SDK_ROOT = memfault-firmware-sdk
-MEMFAULT_CORE_SRC_DIR = $(MEMFAULT_SDK_ROOT)/components/core/src
-MEMFAULT_UTIL_SRC_DIR = $(MEMFAULT_SDK_ROOT)/components/util/src
-MEMFAULT_PANICS_SRC_DIR = $(MEMFAULT_SDK_ROOT)/components/panics/src
-
 RENODE_REPO = renode
-
-SRCS_APP += \
-  $(MEMFAULT_CORE_SRC_DIR)/arch_arm_cortex_m.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_build_id.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_core_utils.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_data_packetizer.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_event_storage.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_log.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_ram_reboot_info_tracking.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_reboot_tracking_serializer.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_sdk_assert.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_serializer_helper.c \
-  $(MEMFAULT_CORE_SRC_DIR)/memfault_trace_event.c \
-  $(MEMFAULT_UTIL_SRC_DIR)/memfault_chunk_transport.c \
-  $(MEMFAULT_UTIL_SRC_DIR)/memfault_circular_buffer.c \
-  $(MEMFAULT_UTIL_SRC_DIR)/memfault_crc16_ccitt.c \
-  $(MEMFAULT_UTIL_SRC_DIR)/memfault_minimal_cbor.c \
-  $(MEMFAULT_UTIL_SRC_DIR)/memfault_varint.c \
-  $(MEMFAULT_PANICS_SRC_DIR)/memfault_coredump.c \
-  $(MEMFAULT_PANICS_SRC_DIR)/memfault_coredump_regions_armv7.c \
-  $(MEMFAULT_PANICS_SRC_DIR)/memfault_fault_handling_arm.c \
-  $(MEMFAULT_SDK_ROOT)/ports/panics/src/memfault_platform_ram_backed_coredump.c
-
-INCLUDES += \
-   $(MEMFAULT_SDK_ROOT)/components/core/include \
-   $(MEMFAULT_SDK_ROOT)/components/util/include \
-   $(MEMFAULT_SDK_ROOT)/components/panics/include
 
 DEFINES += \
 	STM32F4 \
 	GIT_SHA=$(GIT_SHA) \
-  MEMFAULT_EXC_HANDLER_NMI=nmi_handler \
-  MEMFAULT_EXC_HANDLER_HARD_FAULT=hard_fault_handler \
-  MEMFAULT_EXC_HANDLER_MEMORY_MANAGEMENT=mem_manage_handler \
-  MEMFAULT_EXC_HANDLER_BUS_FAULT=bus_fault_handler \
-  MEMFAULT_EXC_HANDLER_USAGE_FAULT=usage_fault_handler \
-  MEMFAULT_RAM_BACKED_COREDUMP_SIZE=81920 \
-
 
 CFLAGS += \
   -mcpu=cortex-m4 \
@@ -95,7 +54,6 @@ LDFLAGS += \
   -specs=nano.specs \
   -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
   -Wl,-Map=$(BUILD_DIR)/$(PROJECT).map \
-  -Wl,--wrap=memfault_platform_coredump_get_regions
 
 LDFLAGS_APP = $(LDFLAGS) -T stm32f429i-discovery.ld
 
@@ -107,8 +65,6 @@ INCLUDES += $(OPENCM3_INCLUDES)
 CFLAGS += $(foreach i,$(INCLUDES),-I$(i))
 CFLAGS += $(foreach d,$(DEFINES),-D$(d))
 LDSCRIPT = stm32f429i-discovery.ld
-
-$(info $(CFLAGS))
 
 .PHONY: all test_docker test_local renode
 all: $(BUILD_DIR)/$(PROJECT).elf

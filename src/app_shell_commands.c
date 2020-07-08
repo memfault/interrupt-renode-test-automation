@@ -4,8 +4,6 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#include "memfault/panics/assert.h"
-
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
