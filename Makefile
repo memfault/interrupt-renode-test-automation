@@ -68,11 +68,11 @@ INCLUDES += \
 DEFINES += \
 	STM32F4 \
 	GIT_SHA=$(GIT_SHA) \
-  MEMFAULT_EXC_HANDLER_NMI=memfault_nmi_handler \
-  MEMFAULT_EXC_HANDLER_HARD_FAULT=memfault_hard_fault_handler \
-  MEMFAULT_EXC_HANDLER_MEMORY_MANAGEMENT=memfault_mem_manage_handler \
-  MEMFAULT_EXC_HANDLER_BUS_FAULT=memfault_bus_fault_handler \
-  MEMFAULT_EXC_HANDLER_USAGE_FAULT=memfault_usage_fault_handler \
+  MEMFAULT_EXC_HANDLER_NMI=nmi_handler \
+  MEMFAULT_EXC_HANDLER_HARD_FAULT=hard_fault_handler \
+  MEMFAULT_EXC_HANDLER_MEMORY_MANAGEMENT=mem_manage_handler \
+  MEMFAULT_EXC_HANDLER_BUS_FAULT=bus_fault_handler \
+  MEMFAULT_EXC_HANDLER_USAGE_FAULT=usage_fault_handler \
   MEMFAULT_RAM_BACKED_COREDUMP_SIZE=81920 \
 
 

@@ -1,8 +1,10 @@
 *** Settings ***
+Resource          ${RENODEKEYWORDS}
+Resource          common.robot
 Suite Setup       Setup
 Suite Teardown    Teardown
 Test Setup        Reset Emulation
-Resource          ${RENODEKEYWORDS}
+Test Teardown     common.Test Teardown
 
 *** Variables ***
 ${SHELL_PROMPT}    shell>
@@ -49,20 +51,29 @@ Greet
     Wait For Prompt On Uart         ${SHELL_PROMPT}
     Write Line To Uart              greet Tyler
 
-    ${p}=  Wait For Line On Uart    Hello (\\w+)!     treatAsRegex=true  timeout=2
+    ${p}=  Wait For Line On Uart    Hello (\\w+)!     treatAsRegex=true
     Should Be True                  'Tyler' == """${p.groups[0]}"""
 
-
-High Water Mark
-    [Documentation]             Validate high water marks after all the tests run
-    [Tags]                      non_critical stability
+Fault
+    [Documentation]             Should fail, but fine since non_critical
+    [Tags]                      non_critical  uart  input
 
     Start Test
 
     Wait For Prompt On Uart         ${SHELL_PROMPT}
-    Write Line To Uart              heap_free
+    Write Line To Uart              fault
 
-    ${p}=  Wait For Line On Uart    (\\d+)     treatAsRegex=true  timeout=2
-    ${i}=  Convert To Integer       ${p.groups[0]}
-    Should Be True                  1000 < ${i}
+    # By now we've crashed
+    Wait For Line On Uart           Nope     timeout=2
 
+
+Should Fail
+    [Documentation]             Should fail, but fine since non_critical
+    [Tags]                      non_critical  uart  input
+
+    Start Test
+
+    Wait For Prompt On Uart         ${SHELL_PROMPT}
+    Write Line To Uart              command_doesnt_exist
+
+    Wait For Line On Uart           Nope     timeout=2

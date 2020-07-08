@@ -5,9 +5,7 @@
 #
 # -------------------------------------------------------
 #
-# Tests a 'stm32f4' STM32F4 ELF by parsing the log output of Renode emulation.
-#
-# First argument is the ELF location.
+# Runs Robot Framework tests in Docker and saves results locally
 
 declare -r HOST_ROOT_DIR=`pwd`
 declare -r HOST_TEST_RESULTS_PATH=${HOST_ROOT_DIR}/test_results
