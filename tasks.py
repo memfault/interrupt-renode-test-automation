@@ -36,9 +36,3 @@ def gdb(ctx):
 def test(ctx):
     """Run tests locally"""
     ctx.run("./run_tests.sh", pty=True)
-
-ns = Collection()
-ns.add_task(renode)
-ns.add_task(console)
-ns.add_task(gdb)
-ns.add_task(test)
